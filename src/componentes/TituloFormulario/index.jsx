@@ -1,9 +1,9 @@
 import './titulo-formulario.estilos.css'
 
-export function TituloFormulario(props) {
+export function TituloFormulario({ children }) {
   return (
     <h2 className='titulo-form'>
-      {props.children}
+      {children}
     </h2>
   )
 }
