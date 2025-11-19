@@ -3,6 +3,7 @@ import { FormularioDeEvento } from './componentes/FormularioDeEvento'
 import { Banner } from './componentes/Banner'
 import { Tema } from './componentes/Tema'
 import { CardEvento } from './componentes/CardEvento';
+import { useState } from 'react';
 
 function App() {
 
@@ -15,18 +16,17 @@ function App() {
         { id: 6, nome: 'cloud' }
     ];
 
-    const eventos = [
+    const [eventos, setEventos] = useState([
         {
             capa: 'https://raw.githubusercontent.com/viniciosneves/tecboard-assets/refs/heads/main/imagem_1.png',
             tema: temas[0],
             data: new Date(),
             titulo: 'Mulheres no front'
         }
-    ]
+    ])
 
     function adicionarEvento(evento) {
-        eventos.push(evento);
-        console.log("Eventos atualizados:", eventos);
+        setEventos([...eventos, evento]);
     }
 
     return (
@@ -39,19 +39,29 @@ function App() {
                 temas={temas}
                 aoSubmeter={adicionarEvento}
             />
-            {temas.map(function (item) {
-                return (
-                    <section key={item.id}>
-                        <Tema tema={item} />
-                        {eventos.map(function (item, indice) {
-                            return <CardEvento evento={item} key={indice} />
-                        })}
+            <section className='container'>
+                {temas.map(function (tema) {
+                    if (!eventos.some(function (evento) {
+                        return evento.tema.id == tema.id
+                    })) {
+                        return null;
+                    }
+                    return (
+                        <section key={tema.id}>
+                            <Tema tema={tema} />
+                            <div className='eventos'>
+                                {eventos.filter(function (evento) {
+                                    return evento.tema.id == tema.id
+                                })
+                                    .map(function (evento, indice) {
+                                        return <CardEvento evento={evento} key={indice} />
+                                    })}
+                            </div>
 
-                    </section>
-                )
-            })
-
-            }
+                        </section>
+                    )
+                })}
+            </section>
         </main>
 
     )
